@@ -70,6 +70,6 @@ jobs:
         with:
           ref: ${{ steps.parse_pr.outputs.pr_head_sha }}
 
-      - name: rebase repository
-        run: |
-          git rebase "${{ steps.parse_pr.outputs.pr_base_ref }}"
+      #- name: rebase repository
+      #  run: |
+      #    git rebase "${{ steps.parse_pr.outputs.pr_base_ref }}"
