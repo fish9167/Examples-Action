@@ -65,12 +65,18 @@ jobs:
           echo "${{ steps.parse_pr.outputs.pr_base_sha }}"
           echo "${{ steps.check_pr.outputs.pr_base }}"
 
-      - name: Checkout engine
+      - name: Checkout engine(base)
         uses: actions/checkout@v3
         with:
           ref: ${{ steps.parse_pr.outputs.pr_head_sha }}
 
-      - name: rebase repository
+      - name: Checkout Commits
         run: |
-          gh pr checkout 92 
-          git rebase  origin/${{ steps.parse_pr.outputs.pr_base_ref }}
+          gh pr checkout ${{ steps.check_pr.outputs.pr_number }}
+
+      - name: ReSync Branch
+        uses: Joao208/resync-branch@1.5.0
+        with:
+          PERSONAL_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          BRANCH_NAME: ${{ steps.parse_pr.outputs.pr_head_ref }}
+          DEFAULT_BRANCH: ${{ steps.parse_pr.outputs.pr_base_ref }}
