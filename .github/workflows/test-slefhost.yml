@@ -68,7 +68,8 @@ jobs:
       - name: Checkout engine
         uses: actions/checkout@v3
         with:
-          ref: ${{ steps.parse_pr.outputs.pr_base_ref }}
+          ref: ${{ steps.parse_pr.outputs.pr_head_sha }}
 
-      - run: |
-          gh pr checkout ${{ steps.check_pr.outputs.pr_number }}
+      - name: rebase repository
+        run: |
+          git rebase ${{ steps.parse_pr.outputs.pr_base_ref }}
