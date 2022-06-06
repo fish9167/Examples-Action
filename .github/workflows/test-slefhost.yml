@@ -72,4 +72,4 @@ jobs:
 
       - name: rebase repository
         run: |
-          git rebase ${{ steps.parse_pr.outputs.pr_base_ref }}
+          git rebase "${{ steps.parse_pr.outputs.pr_base_ref }}"
