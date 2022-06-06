@@ -8,10 +8,10 @@ on:
     types: [created, edited]
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  group: ${{ github.workflow }}-${{ github.ref || github.head_ref }}
   cancel-in-progress: true
-  
-jobs:
+
+jobs:  
   Win-RunTestCases:
     if: |
       contains(github.event.pull_request.body, '[X] needs automatic test cases check') ||
