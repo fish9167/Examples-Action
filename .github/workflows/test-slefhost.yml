@@ -7,6 +7,10 @@ on:
   pull_request_review_comment:
     types: [created, edited]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   Win-RunTestCases:
     if: |
