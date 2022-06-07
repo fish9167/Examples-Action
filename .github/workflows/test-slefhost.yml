@@ -67,7 +67,8 @@ jobs:
         with:
           ref: ${{ steps.parse_pr.outputs.pr_head_sha }}
 
-      - name: Checkout Commits
+      - name: Checkout rebase
         run: |
           gh pr checkout ${{ steps.check_pr.outputs.pr_number }}
+          git fetch origin
           git rebase origin/${{ steps.parse_pr.outputs.pr_base_ref }}
