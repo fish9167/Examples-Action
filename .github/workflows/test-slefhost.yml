@@ -62,7 +62,7 @@ jobs:
           echo "${{ steps.parse_pr.outputs.pr_base_ref }}"
           echo "${{ steps.parse_pr.outputs.pr_base_sha }}"
 
-      - name: Checkout engine(base)
+      - name: Checkout engine
         uses: actions/checkout@v3
         with:
           ref: ${{ steps.parse_pr.outputs.pr_head_sha }}
