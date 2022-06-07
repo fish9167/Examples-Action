@@ -7,6 +7,7 @@ on:
   pull_request_review_comment:
     types: [created, edited]
 
+# github.head_ref is only defined on pull_request events
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
   cancel-in-progress: true
@@ -25,11 +26,9 @@ jobs:
         run: |
           if ("${{ github.event_name }}" -eq "issue_comment") {
             Write-Host "::set-output name=pr_number::${{ github.event.issue.number }}"
-            Write-Host "::set-output name=pr_base::${{ github.ref }}"
           }
           else {
             Write-Host "::set-output name=pr_number::${{ github.event.pull_request.number }}"
-            Write-Host "::set-output name=pr_base::${{ github.ref }}"
           }
 
       - name: Get PR Details
@@ -50,7 +49,6 @@ jobs:
           "@ | ConvertFrom-Json
           Write-Host $pull_request
           Write-Host "::set-output name=pr_html_url::$($pull_request.html_url)"
-          Write-Host "::set-output name=pr_number::$($pull_request.number)"
           Write-Host "::set-output name=pr_author::$($pull_request.user.login)"
           Write-Host "::set-output name=pr_head_ref::$($pull_request.head.ref)"
           Write-Host "::set-output name=pr_head_sha::$($pull_request.head.sha)"
@@ -63,12 +61,19 @@ jobs:
           echo "${{ steps.parse_pr.outputs.pr_head_sha }}"
           echo "${{ steps.parse_pr.outputs.pr_base_ref }}"
           echo "${{ steps.parse_pr.outputs.pr_base_sha }}"
-          echo "${{ steps.check_pr.outputs.pr_base }}"
 
       - name: Checkout engine
         uses: actions/checkout@v3
         with:
-          ref: ${{ steps.parse_pr.outputs.pr_base_ref }}
+          ref: ${{ steps.parse_pr.outputs.pr_head_sha }}
 
-      - run: |
+      - name: Checkout rebase
+        run: |
           gh pr checkout ${{ steps.check_pr.outputs.pr_number }}
+          git reset --hard
+          git checkout oringin/${{ steps.parse_pr.outputs.pr_base_ref }}
+          git branch -D ${{ steps.parse_pr.outputs.pr_base_ref }}
+          git branch -D pull-${{ steps.check_pr.outputs.pr_number }}
+          git branch ${{ steps.parse_pr.outputs.pr_base_ref }}
+          git fetch origin pull/${{ steps.check_pr.outputs.pr_number }}/head:pull-${{ steps.check_pr.outputs.pr_number }}
+          git merge --ff --no-verify -m "PR Test" pull-${{ steps.check_pr.outputs.pr_number }}
