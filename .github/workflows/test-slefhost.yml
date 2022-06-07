@@ -74,4 +74,4 @@ jobs:
           git branch -D ${{ steps.parse_pr.outputs.pr_base_ref }}
           git branch ${{ steps.parse_pr.outputs.pr_base_ref }}
           git fetch origin pull/${{ steps.check_pr.outputs.pr_number }}/head:pull-${{ steps.check_pr.outputs.pr_number }}
-          git merge --ff --no-verify -m "PR Test" origin/${{ steps.parse_pr.outputs.pr_base_ref }} pull-${{ steps.check_pr.outputs.pr_number }}
+          git merge --ff -s recursive --no-verify -m "PR Test" origin/${{ steps.parse_pr.outputs.pr_base_ref }} pull-${{ steps.check_pr.outputs.pr_number }}
