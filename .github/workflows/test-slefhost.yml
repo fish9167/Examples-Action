@@ -17,8 +17,8 @@ jobs:
     if: |
       contains(github.event.pull_request.body, '[X] needs automatic test cases check') ||
       contains(github.event.comment.body, '@cocos-robot run test cases')
-    runs-on: self-hosted-win
-
+    #runs-on: self-hosted-win
+    runs-on: windows-2019
     steps:
       - name: Get PR Number
         id: check_pr
@@ -75,3 +75,4 @@ jobs:
           git branch ${{ steps.parse_pr.outputs.pr_base_ref }}
           git fetch origin pull/${{ steps.check_pr.outputs.pr_number }}/head:pull-${{ steps.check_pr.outputs.pr_number }}
           git merge --ff --no-verify -m "PR Test" origin/${{ steps.parse_pr.outputs.pr_base_ref }} pull-${{ steps.check_pr.outputs.pr_number }}
+          cat *.txt
