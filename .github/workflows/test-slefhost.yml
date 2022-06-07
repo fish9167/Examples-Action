@@ -69,11 +69,9 @@ jobs:
 
       - name: Checkout rebase
         run: |
-          git reset --hard
-          git branch          
+          git reset --hard   
           git checkout origin/${{ steps.parse_pr.outputs.pr_base_ref }}
           git branch -D ${{ steps.parse_pr.outputs.pr_base_ref }}
-          git branch -D pull-${{ steps.check_pr.outputs.pr_number }}
           git branch ${{ steps.parse_pr.outputs.pr_base_ref }}
           git fetch origin pull/${{ steps.check_pr.outputs.pr_number }}/head:pull-${{ steps.check_pr.outputs.pr_number }}
-          git merge --ff --no-verify -m "PR Test" pull-${{ steps.check_pr.outputs.pr_number }}
+          git merge --ff --no-verify -m "PR Test" origin/${{ steps.parse_pr.outputs.pr_base_ref }} pull-${{ steps.check_pr.outputs.pr_number }}
