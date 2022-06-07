@@ -70,5 +70,10 @@ jobs:
       - name: Checkout rebase
         run: |
           gh pr checkout ${{ steps.check_pr.outputs.pr_number }}
-          git fetch origin
-          git rebase origin/${{ steps.parse_pr.outputs.pr_base_ref }}
+          git reset --hard
+          git checkout oringin/${{ steps.parse_pr.outputs.pr_base_ref }}
+          git branch -D ${{ steps.parse_pr.outputs.pr_base_ref }}
+          git branch -D pull-${{ steps.check_pr.outputs.pr_number }}
+          git branch ${{ steps.parse_pr.outputs.pr_base_ref }}
+          git fetch origin pull/${{ steps.check_pr.outputs.pr_number }}/head:pull-${{ steps.check_pr.outputs.pr_number }}
+          git merge --ff --no-verify -m "PR Test" pull-${{ steps.check_pr.outputs.pr_number }}
