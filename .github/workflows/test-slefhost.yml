@@ -71,6 +71,7 @@ jobs:
         run: |
           git reset --hard   
           git checkout origin/${{ steps.parse_pr.outputs.pr_base_ref }}
+          git pull origin ${{ steps.parse_pr.outputs.pr_base_ref }} --allow-unrelated-histories          
           git branch -D ${{ steps.parse_pr.outputs.pr_base_ref }}
           git branch ${{ steps.parse_pr.outputs.pr_base_ref }}
           git fetch origin pull/${{ steps.check_pr.outputs.pr_number }}/head:pull-${{ steps.check_pr.outputs.pr_number }}
