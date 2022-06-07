@@ -70,6 +70,7 @@ jobs:
       - name: Checkout rebase
         run: |
           git reset --hard
+          git branch          
           git checkout origin/${{ steps.parse_pr.outputs.pr_base_ref }}
           git branch -D ${{ steps.parse_pr.outputs.pr_base_ref }}
           git branch -D pull-${{ steps.check_pr.outputs.pr_number }}
